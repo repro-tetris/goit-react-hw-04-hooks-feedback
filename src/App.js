@@ -4,6 +4,11 @@ import { FeedbackOptions } from "./components/FeedbackOptions/FeedbackOptions";
 import { Statistics } from "./components/Statistic";
 import { Notification } from "./components/Notification/Notification";
 
+const STATE = {
+  VALUE: 0,
+  FUNC: 1,
+};
+
 export default function App() {
   const feedbackCnt = {
     good: useState(0),
@@ -11,9 +16,9 @@ export default function App() {
     bad: useState(0),
   };
 
-  const [good, setGood] = useState(0);
-  const [neutral, setNeutral] = useState(0);
-  const [bad, setBad] = useState(0);
+  const [good, neutral, bad] = Object.values(feedbackCnt).map(
+    (cnt) => cnt[STATE.VALUE]
+  );
 
   const countTotalFeedback = () => good + neutral + bad;
   const countPositiveFeedbackPercentage = () => {
@@ -22,19 +27,7 @@ export default function App() {
   };
 
   const handleButton = (feedbackEntity) => {
-    switch (feedbackEntity) {
-      case "good":
-        setGood((prev) => prev + 1);
-        break;
-      case "bad":
-        setBad((prev) => prev + 1);
-        break;
-      case "neutral":
-        setNeutral((prev) => prev + 1);
-        break;
-      default:
-        break;
-    }
+    feedbackCnt[feedbackEntity][STATE.FUNC]((prev) => prev + 1);
   };
 
   const total = countTotalFeedback();
