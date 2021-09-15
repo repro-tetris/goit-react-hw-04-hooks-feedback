@@ -4,30 +4,27 @@ import { FeedbackOptions } from "./components/FeedbackOptions/FeedbackOptions";
 import { Statistics } from "./components/Statistic";
 import { Notification } from "./components/Notification/Notification";
 
-const STATE = {
-  VALUE: 0,
-  FUNC: 1,
-};
-
 export default function App() {
-  const feedbackCnt = {
-    good: useState(0),
-    neutral: useState(0),
-    bad: useState(0),
-  };
+  const [feedbackCounters, setFeedbackCounters] = useState({
+    good: 0,
+    bad: 0,
+    neutral: 0,
+  });
 
-  const [good, neutral, bad] = Object.values(feedbackCnt).map(
-    (cnt) => cnt[STATE.VALUE]
-  );
+  const { good, neutral, bad } = feedbackCounters;
 
   const countTotalFeedback = () => good + neutral + bad;
+
   const countPositiveFeedbackPercentage = () => {
     const total = countTotalFeedback();
     return total === 0 ? "%" : Math.round((good * 100) / total) + "%";
   };
 
   const handleButton = (feedbackEntity) => {
-    feedbackCnt[feedbackEntity][STATE.FUNC]((prev) => prev + 1);
+    setFeedbackCounters((prev) => ({
+      ...prev,
+      [feedbackEntity]: prev[feedbackEntity] + 1,
+    }));
   };
 
   const total = countTotalFeedback();
